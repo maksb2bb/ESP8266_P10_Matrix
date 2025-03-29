@@ -138,43 +138,73 @@ void drawScrollingText() {
 }
 
 void drawKitLogo() {
-  // Верхняя часть логотипа
-  dmd.drawLine(0, 14, 16, 14, GRAPHICS_ON);
-  dmd.drawLine(0, 13, 16, 13, GRAPHICS_ON);
-  dmd.drawLine(16, 14, 20, 5, GRAPHICS_ON);
-  dmd.drawLine(16, 13, 20, 4, GRAPHICS_ON);
-  dmd.drawLine(20, 5, 30, 5, GRAPHICS_ON);
-  dmd.drawLine(20, 4, 30, 4, GRAPHICS_ON);
-  dmd.drawCircle(33, 4, 3, GRAPHICS_ON);
-  dmd.drawCircle(33, 4, 2, GRAPHICS_ON);
+      dmd.drawLine(0, 14, 16, 14, GRAPHICS_ON);  // x y x y
+      dmd.drawLine(0, 13, 16, 13, GRAPHICS_ON);
 
-  // Средняя часть логотипа
-  dmd.drawLine(20, 14, 40, 14, GRAPHICS_ON);
-  dmd.drawLine(20, 13, 40, 13, GRAPHICS_ON);
-  dmd.drawLine(40, 14, 45, 5, GRAPHICS_ON);
-  dmd.drawLine(40, 13, 45, 4, GRAPHICS_ON);
-  dmd.drawLine(45, 5, 60, 5, GRAPHICS_ON);
-  dmd.drawLine(45, 4, 60, 4, GRAPHICS_ON);
-  dmd.drawLine(60, 5, 65, 14, GRAPHICS_ON);
-  dmd.drawLine(60, 4, 65, 13, GRAPHICS_ON);
-  dmd.drawLine(65, 14, 75, 14, GRAPHICS_ON);
-  dmd.drawLine(65, 13, 75, 13, GRAPHICS_ON);
-  dmd.drawCircle(78, 13, 3, GRAPHICS_ON);
-  dmd.drawCircle(78, 13, 2, GRAPHICS_ON);
+      dmd.drawLine(16, 14, 20, 5, GRAPHICS_ON);
+      dmd.drawLine(16, 13, 20, 4, GRAPHICS_ON);
 
-  // Нижняя часть логотипа
-  dmd.drawCircle(68, 4, 3, GRAPHICS_ON);
-  dmd.drawCircle(68, 4, 2, GRAPHICS_ON);
-  dmd.drawLine(71, 5, 85, 5, GRAPHICS_ON);
-  dmd.drawLine(71, 4, 85, 4, GRAPHICS_ON);
-  dmd.drawLine(85, 5, 90, 14, GRAPHICS_ON);
-  dmd.drawLine(85, 4, 90, 13, GRAPHICS_ON);
-  dmd.drawLine(90, 14, 100, 14, GRAPHICS_ON);
-  dmd.drawLine(90, 13, 100, 13, GRAPHICS_ON);
-  dmd.drawLine(100, 14, 105, 5, GRAPHICS_ON);
-  dmd.drawLine(100, 13, 105, 4, GRAPHICS_ON);
-  dmd.drawLine(105, 5, 128, 5, GRAPHICS_ON);
-  dmd.drawLine(105, 4, 128, 4, GRAPHICS_ON);
+      dmd.drawLine(20, 5, 30, 5, GRAPHICS_ON);
+      dmd.drawLine(20, 4, 30, 4, GRAPHICS_ON);
+
+      dmd.drawCircle(33, 4, 3, GRAPHICS_ON);
+      dmd.drawCircle(33, 4, 2, GRAPHICS_ON);  //1 line
+
+      dmd.drawLine(20, 14, 40, 14, GRAPHICS_ON);
+      dmd.drawLine(20, 13, 40, 13, GRAPHICS_ON);
+
+      dmd.drawLine(40, 14, 45, 5, GRAPHICS_ON);
+      dmd.drawLine(40, 13, 45, 4, GRAPHICS_ON);
+
+      dmd.drawLine(45, 5, 60, 5, GRAPHICS_ON);
+      dmd.drawLine(45, 4, 60, 4, GRAPHICS_ON);
+
+      dmd.drawLine(60, 5, 65, 14, GRAPHICS_ON);
+      dmd.drawLine(60, 4, 65, 13, GRAPHICS_ON);
+
+      dmd.drawLine(65, 14, 75, 14, GRAPHICS_ON);
+      dmd.drawLine(65, 13, 75, 13, GRAPHICS_ON);
+      dmd.drawCircle(78, 13, 3, GRAPHICS_ON);
+      dmd.drawCircle(78, 13, 2, GRAPHICS_ON);  //2 line
+
+      dmd.drawCircle(68, 4, 3, GRAPHICS_ON);
+      dmd.drawCircle(68, 4, 2, GRAPHICS_ON);
+      dmd.drawLine(71, 5, 85, 5, GRAPHICS_ON);
+      dmd.drawLine(71, 4, 85, 4, GRAPHICS_ON);
+      dmd.drawLine(85, 5, 90, 14, GRAPHICS_ON);
+      dmd.drawLine(85, 4, 90, 13, GRAPHICS_ON);
+      dmd.drawLine(90, 14, 100, 14, GRAPHICS_ON);
+      dmd.drawLine(90, 13, 100, 13, GRAPHICS_ON);
+      dmd.drawLine(100, 14, 105, 5, GRAPHICS_ON);
+      dmd.drawLine(100, 13, 105, 4, GRAPHICS_ON);
+      dmd.drawLine(105, 5, 128, 5, GRAPHICS_ON);
+      dmd.drawLine(105, 4, 128, 4, GRAPHICS_ON);  // 3 line
+
+      // ======================================
+
+      dmd.drawLine(0, 35, 16, 35, GRAPHICS_ON);
+      dmd.drawLine(0, 36, 16, 36, GRAPHICS_ON);
+      dmd.drawLine(16, 35, 21, 43, GRAPHICS_ON);
+      dmd.drawLine(16, 36, 21, 44, GRAPHICS_ON);
+      dmd.drawLine(21, 43, 31, 43, GRAPHICS_ON);
+      dmd.drawLine(21, 44, 31, 44, GRAPHICS_ON);
+      dmd.drawCircle(34, 44, 3, GRAPHICS_ON);
+      dmd.drawCircle(34, 44, 2, GRAPHICS_ON);  // 1 line
+
+      dmd.drawLine(20, 35, 40, 35, GRAPHICS_ON);
+      dmd.drawLine(20, 36, 40, 36, GRAPHICS_ON);
+      dmd.drawLine(40, 35, 45, 43, GRAPHICS_ON);
+      dmd.drawLine(40, 36, 45, 44, GRAPHICS_ON);  // 2 line
+
+      dmd.drawLine(45, 43, 60, 43, GRAPHICS_ON);
+      dmd.drawLine(45, 44, 60, 44, GRAPHICS_ON);
+
+      dmd.drawLine(60, 43, 65, 35, GRAPHICS_ON);
+      dmd.drawLine(60, 44, 65, 36, GRAPHICS_ON);
+      dmd.drawLine(65, 35, 75, 35, GRAPHICS_ON);
+      dmd.drawLine(65, 36, 75, 36, GRAPHICS_ON);
+      dmd.drawCircle(78, 36, 3, GRAPHICS_ON);
+      dmd.drawCircle(78, 36, 2, GRAPHICS_ON);
 }
 
 void drawKitLeftLogoWithText() {
