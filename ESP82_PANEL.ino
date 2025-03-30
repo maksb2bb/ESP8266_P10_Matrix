@@ -19,8 +19,8 @@ const int SCROLL_DELAY = 5; // Задержка для скролла в сек�
 const int SCROLL_SPEED = 50; // Скорость скролла в мс
 
 // Настройки WiFi
-const char* SSID = "YOUR_SSID"; //Updete this
-const char* PASSWORD = "YOUR_PASSWORD"; //Update this
+const char* SSID = "SKBKIT";
+const char* PASSWORD = "skbkit2024";
 IPAddress staticIP(10, 131, 170, 4);
 IPAddress gateway(10, 131, 170, 1);
 IPAddress subnet(255, 255, 255, 0);
@@ -90,14 +90,6 @@ void drawBinaryArray(const uint8_t* data) {
   }
 }
 
-int calculateTextWidth(const String &text) {
-  int totalWidth = 0;
-  for (unsigned int i = 0; i < text.length(); i++) {
-    totalWidth += dmd.charWidth(text[i]);
-  }
-  return totalWidth;
-}
-
 void switchDisplayMode() {
   if (panelPower == PanelPower::POWER_ON) {
     if (showText) {
@@ -117,7 +109,7 @@ void handleScroll() {
     scrollPosition--;
     
     // Если текст полностью прокрутился, сбрасываем позицию
-    if (scrollPosition < -calculateTextWidth(displayText)) {
+    if (scrollPosition < -dmd.stringWidth(displayText, Font_BOLD)) {
       scrollPosition = DISPLAY_WIDTH;
     }
   }
@@ -131,14 +123,14 @@ void drawScrollingText() {
   }
   box->print(displayText.c_str());
   
-  scrollEnabled = (calculateTextWidth(displayText) > DISPLAY_WIDTH);
+  scrollEnabled = (dmd.stringWidth(displayText, Font_BOLD) > DISPLAY_WIDTH);
   if (scrollEnabled) {
     scrollPosition = 0;
   }
 }
 
 void drawKitLogo() {
-      dmd.drawLine(0, 14, 16, 14, GRAPHICS_ON);  // x y x y
+dmd.drawLine(0, 14, 16, 14, GRAPHICS_ON);  // x y x y
       dmd.drawLine(0, 13, 16, 13, GRAPHICS_ON);
 
       dmd.drawLine(16, 14, 20, 5, GRAPHICS_ON);
@@ -233,11 +225,10 @@ void updateScreen() {
       drawText();
       drawKitLogo();
       
-      scrollEnabled = (calculateTextWidth(displayText) > DISPLAY_WIDTH);
+      scrollEnabled = (dmd.stringWidth(displayText, Font_BOLD) > DISPLAY_WIDTH);
       if (scrollEnabled) {
         scrollTicker.attach_ms(SCROLL_SPEED, handleScroll);
       } else {
-        Serial.println("Текст помещается - скроллинг не требуется");
       }
       break;
       
@@ -250,7 +241,6 @@ void updateScreen() {
       break;
       
     case PanelState::STATIC_LOGO:
-      Serial.println("Активация режима: STATIC_LOGO");
       dmd.clearScreen();
       drawKitLeftLogoWithText();
       break;
@@ -263,7 +253,7 @@ void updateScreen() {
 }
 
 void drawText() {
-  int textWidth = calculateTextWidth(displayText);
+  int textWidth = dmd.stringWidth(displayText, Font_BOLD);
   int xOffset = (textWidth < DISPLAY_WIDTH) ? (DISPLAY_WIDTH - textWidth) / 2 : 0;
 
   if (box) {
@@ -295,13 +285,11 @@ String panelStateToString(PanelState state) {
 
 void handleText(AsyncWebServerRequest* request, const JsonVariant& json) {
   if (!json.containsKey("text")) {
-    Serial.println("Ошибка: запрос text без поля 'text'");
     request->send(400, "application/json", "{\"error\": \"Missing text field\"}");
     return;
   }
 
   displayText = json["text"].as<String>();
-  Serial.print("Получен новый текст: '"); Serial.print(displayText); Serial.println("'");
   isUpdater = true;
   updateScreen();
   
@@ -310,7 +298,6 @@ void handleText(AsyncWebServerRequest* request, const JsonVariant& json) {
 
 void handleTurn(AsyncWebServerRequest* request, const JsonVariant& json) {
   if (!json.containsKey("state")) {
-    Serial.println("Ошибка: запрос led без поля 'state'");
     request->send(400, "application/json", "{\"error\": \"Missing state field\"}");
     return;
   }
@@ -319,7 +306,6 @@ void handleTurn(AsyncWebServerRequest* request, const JsonVariant& json) {
   PanelState newState = intToPanelState(panelStateInt);
   
   if (newState == PanelState::UNKNOWN) {
-    Serial.print("Ошибка: недопустимое состояние: "); Serial.println(panelStateInt);
     request->send(400, "application/json", "{\"error\": \"Invalid state value\"}");
     return;
   }
@@ -353,7 +339,6 @@ void setup() {
   dmd.clearScreen();
 
   panelPower = PanelPower::POWER_ON;
-  Serial.println("Стартовый режим: STATIC_LOGO (0)");
   updateScreen();
 
   server.on("/api/text", HTTP_POST, 
@@ -364,7 +349,6 @@ void setup() {
       DeserializationError error = deserializeJson(jsonReq, data, len);
 
       if (error) {
-        Serial.print("Ошибка парсинга JSON: "); Serial.println(error.c_str());
         request->send(400, "application/json", "{\"error\": \"Invalid JSON\"}");
         return;
       }
@@ -373,7 +357,6 @@ void setup() {
     });
 
   server.on("/api/led", HTTP_GET, [](AsyncWebServerRequest* request) {
-    Serial.println("Запрос текущего состояния");
     request->send(200, "application/json", 
       String("{\"panel\":\"") + (panelPower == PanelPower::POWER_ON ? "on" : "off") + 
       "\",\"state\":" + String(static_cast<int>(currentState)) + "}");
@@ -387,7 +370,6 @@ void setup() {
       DeserializationError error = deserializeJson(jsonReq, data, len);
 
       if (error) {
-        Serial.print("Ошибка парсинга JSON: "); Serial.println(error.c_str());
         request->send(400, "application/json", "{\"error\": \"Invalid JSON\"}");
         return;
       }
