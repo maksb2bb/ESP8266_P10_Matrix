@@ -246,11 +246,12 @@ void drawKitLeftLogoWithText()
 
 void updateScreen()
 {
+    modeTicker.detach();
+    scrollTicker.detach();
+
   if (panelPower == PanelPower::POWER_OFF)
   {
     dmd.clearScreen();
-    modeTicker.detach();
-    scrollTicker.detach();
     return;
   }
 
@@ -356,60 +357,47 @@ void handleText(AsyncWebServerRequest *request, const JsonVariant &json)
   request->send(200, "application/json", "{\"status\": \"OK\"}");
 }
 
-void handleTurn(AsyncWebServerRequest *request, const JsonVariant &json)
-{
-  // Обработка включения/выключения панели
-  if (json.containsKey("panel"))
-  {
-    String panelTurn = json["panel"].as<String>();
-    PanelPower newPower = (panelTurn == "on") ? PanelPower::POWER_ON : PanelPower::POWER_OFF;
+void handleTurn(AsyncWebServerRequest* request, const JsonVariant& json) {
+    bool powerChanged = false;
+    bool modeChanged = false;
 
-    if (panelPower != newPower)
-    {
-      panelPower = newPower;
-      Serial.print("Изменение состояния питания: ");
-      Serial.println(panelPower == PanelPower::POWER_ON ? "ON" : "OFF");
-      isUpdater = true;
-    }
-  }
-
-  // Обработка изменения режима
-  if (json.containsKey("state"))
-  {
-    int panelStateInt = json["state"].as<int>();
-    PanelState newState = intToPanelState(panelStateInt);
-
-    if (newState == PanelState::UNKNOWN)
-    {
-      Serial.print("Ошибка: недопустимое состояние: ");
-      Serial.println(panelStateInt);
-      request->send(400, "application/json", "{\"error\": \"Invalid state value\"}");
-      return;
+    // Обработка включения/выключения панели
+    if (json.containsKey("panel")) {
+        String panelTurn = json["panel"].as<String>();
+        
+        PanelPower newPower = (panelTurn == "om") ? PanelPower::POWER_ON : PanelPower::POWER_OFF;
+        powerChanged = (panelPower != newPower);
+        
+        if (powerChanged) {
+            panelPower = newPower;
+        }
     }
 
-    if (currentState != newState)
-    {
-      currentState = newState;
-      Serial.print("Изменение режима: ");
-      Serial.println(static_cast<int>(currentState));
-      isUpdater = true;
+    // Обработка изменения режима
+    if (json.containsKey("state")) {
+        int panelStateInt = json["state"].as<int>();
+        
+        PanelState newState = intToPanelState(panelStateInt);
+        
+        if (newState == PanelState::UNKNOWN) {
+            request->send(400, "application/json", "{\"error\": \"Invalid state value\"}");
+            return;
+        }
+
+        modeChanged = (currentState != newState);
+        if (modeChanged) {
+            currentState = newState;
+        }
     }
-  }
 
-  // Остановка всех тикеров перед изменением состояния
-  modeTicker.detach();
-  scrollTicker.detach();
+    if (powerChanged || modeChanged) {
+        updateScreen();
+    } else {
+    }
 
-  // Обновление экрана при изменениях
-  if (isUpdater)
-  {
-    updateScreen();
-    isUpdater = false;
-  }
-
-  // Формирование ответа
-  String response = "{\"panel\":\"" + String(panelPower == PanelPower::POWER_ON ? "on" : "off") + "\",\"state\":" + String(static_cast<int>(currentState)) + "}";
-  request->send(200, "application/json", response);
+    String response = "{\"panel\":\"" + String(panelPower == PanelPower::POWER_ON ? "on" : "off") + 
+                     "\",\"state\":" + String(static_cast<int>(currentState)) + "}";
+    request->send(200, "application/json", response);
 }
 
 void setup()
